@@ -75,48 +75,43 @@ public class Gui extends JFrame implements ActionListener
 		
 	}
 	
-	/*Actions performed by user are set here*/
+	/*--------Actions performed by user are set here--------*/
 	public void actionPerformed(ActionEvent event) 
 	{
-		//Open only text files and set it to default text files
-		filter = new FileNameExtensionFilter("Text Files","txt");
-		//Set default as text files only
+		filter = new FileNameExtensionFilter("Text Files","txt");			//Open only text files and set it to default text files
 		Chooser.addChoosableFileFilter(filter);
 		Chooser.setAcceptAllFileFilterUsed(false);
 		
-		//BUTTON 1 -------------------------------------
+		//-------------------------BUTTON 1-------------------------
 		if(event.getSource()==ChooseFile)
 		{
-			sentence.clear();
-			//Open the text file, put in to file variable
+			sentence.clear();												//Clear the array list
+
 			Chooser.showOpenDialog(null);
-			File inputSentence = Chooser.getSelectedFile();
-			
-			//Scan through the file
-			try{
+			File inputSentence = Chooser.getSelectedFile();					//Open the text file, put directory into file variable
+																			
+			try{															//Scan through the file
 				input = new Scanner(inputSentence);
 				}
 				catch (FileNotFoundException e) 
 				{
 				}
 			
-			//Read through it and for now put it inside the text area
-			while (input.hasNext())
+			while (input.hasNext())											//Read through it and put into console for testing purposes
 			{	
 				sentence.add(input.next());
 			}	
 			System.out.println(sentence);
 			input.close();
 		}
-		//BUTTON 2 -------------------------
+		//-------------------------BUTTON 2 -------------------------
 		if (event.getSource()==ChooseDictionary)
 		{
-			//Clear arraylist and input new values 
-			dictionary.clear();
+			dictionary.clear();												//Clear arraylist
 			Chooser.showOpenDialog(null);
 			File inputDict = Chooser.getSelectedFile();	
-			
-			try 
+																			//Same as above, open the file, scan it, put into array list, store directory in string format
+			try 															//to allow editing the text file
 			{ 
 				input = new Scanner(inputDict);
 			} catch (FileNotFoundException e) 
@@ -130,21 +125,19 @@ public class Gui extends JFrame implements ActionListener
 			input.close();
 			System.out.println(dictionary);
 		}
-		//BUTTON 3 -------------------------
+		//-------------------------BUTTON 3-------------------------
 		if(event.getSource()==Compare)
 		{
-			//Clear text area 
-			area1.setText("");
+			area1.setText("");												//Clear text area 
 			
-			//Error check if user didn't choose dictionary or has word list
-			if(dictionary.isEmpty() || sentence.isEmpty())
+			if(dictionary.isEmpty() || sentence.isEmpty())					//Error check if user didn't choose dictionary or sentence to check
 			{
 				JOptionPane.showMessageDialog(this,"Please choose a dictionary and a file to compare");
-				return;
+				return;														//Exit if null
 			}
-			counter=0;//Reset counter
-			//Loop to iterate and  compare both array lists
-			for(int i =0; i < dictionary.size();i++)
+			counter=0;														//Reset slang counter
+			
+			for(int i =0; i < dictionary.size();i++)						//Nested Loop to iterate and  compare both array lists
 			{
 				for(int j=0; j < sentence.size();j++)
 				{
@@ -156,11 +149,9 @@ public class Gui extends JFrame implements ActionListener
 				}
 			}
 			
-			//Get percentage of file that contains slang
-			percentage = ((float)counter/sentence.size())*100;
+			percentage = ((float)counter/sentence.size())*100;				//Get percentage of file that contains slang
 			
-			//Print to user the amount of slang words, and percentage of text file that is slang
-			area1.append("\n\nThere are: "+counter+" Slang words");
+			area1.append("\n\nThere are: "+counter+" Slang words");			//Print to user the amount of slang words, and percentage of text file that is slang
 			area1.append("\nThe sentence is: "+format.format(percentage)+"% Slang");
 			
 			if(counter!=0)
@@ -181,21 +172,18 @@ public class Gui extends JFrame implements ActionListener
 			}
 			else
 			{
-				//User input for the new word in dictionary
-				word = JOptionPane.showInputDialog("Please enter the word you want to input");
+				word = JOptionPane.showInputDialog("Please enter the word you want to input");		//User input for the new word in dictionary
 				try {
-					FileWriter out = new FileWriter(directory, true);
+					FileWriter out = new FileWriter(directory, true);								//Write to file a new line, the word and close
 					out.write("\n");
 					out.write(word);
-					out.flush();
 					out.close();
 					
 				} catch (IOException e)
 				{
 					e.printStackTrace();
 				}
-				//Choose dictionary again
-				JOptionPane.showMessageDialog(this,"Dictionary updated, please choose your dictionary again");
+				JOptionPane.showMessageDialog(this,"Dictionary updated, please choose your dictionary again");			//Choose dictionary file again to compare
 			}
 		}
 	}
