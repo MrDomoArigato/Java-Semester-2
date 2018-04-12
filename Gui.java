@@ -22,44 +22,44 @@ import java.awt.event.ActionEvent;
 
 public class Gui extends JFrame implements ActionListener
 {
-	private File directory;													//Variables to store directory as string
+	private File directory;							//Variables to store directory as string
 	private static ArrayList<String> sentence = new ArrayList<String>();	//Array lists used to store file input
 	private static ArrayList<String> dictionary = new ArrayList<String>();
 	
-	private	JFileChooser Chooser=new JFileChooser();						//File Chooser for user to use GUI to choose a file to open
+	private	JFileChooser Chooser=new JFileChooser();			//File Chooser for user to use GUI to choose a file to open
 	private FileNameExtensionFilter filter;
 	
-	private JButton ChooseFile,ChooseDictionary,Compare,Edit;				//Java buttons and text area for testing and user input
+	private JButton ChooseFile,ChooseDictionary,Compare,Edit;		//Java buttons and text area for testing and user input
 	private JTextArea area1;
 	private int counter;
 	
-	private Scanner input = new Scanner(System.in);							//Scanner to read through the file and input the values
+	private Scanner input = new Scanner(System.in);				//Scanner to read through the file and input the values
 	
-	private double percentage;												//Double to store percentage of file that is slang
+	private double percentage;						//Double to store percentage of file that is slang
 	
-	NumberFormat format = new DecimalFormat("#0.00");						//Format the output to 2 decimal places, don't want huge floating point values
+	NumberFormat format = new DecimalFormat("#0.00");			//Format the output to 2 decimal places, don't want huge floating point values
 	
-	private String word;													//Store users word input
+	private String word;							//Store users word input
 	
 	Gui(String title)
 	{
-		super(title);														//Edit options of the gui layout etc
+		super(title);							//Edit options of the gui layout etc
 		setSize(800,400);
 		setLayout(new FlowLayout());
 		setLocation(100,100);
 		
 
-		Chooser.setPreferredSize(new Dimension(1000,500));					//Edit the size of the FileChooser menu
+		Chooser.setPreferredSize(new Dimension(1000,500));		//Edit the size of the FileChooser menu
 
-		ChooseFile=new JButton("Click to choose text file to check");		//Button to start the FileChooser and choose what file to read through
+		ChooseFile=new JButton("Click to choose text file to check");	//Button to start the FileChooser and choose what file to read through
 		ChooseFile.addActionListener(this);
 		add(ChooseFile);
 
-		ChooseDictionary = new JButton("Click to choose dictionary"); 		//Choose dictionary button
+		ChooseDictionary = new JButton("Click to choose dictionary"); 	//Choose dictionary button
 		ChooseDictionary.addActionListener(this);
 		add(ChooseDictionary);
 
-		Compare = new JButton("COMPARE!"); 									//Compare button
+		Compare = new JButton("COMPARE!"); 				//Compare button
 		Compare.addActionListener(this);
 		add(Compare);
 		
@@ -67,8 +67,7 @@ public class Gui extends JFrame implements ActionListener
 		Edit.addActionListener(this);
 		add(Edit);
 		
-
-		area1=new JTextArea(15,15);											//Area of text field
+		area1=new JTextArea(15,15);					//Area of text field
 		add(area1);
 
 		setVisible(true);
@@ -78,26 +77,26 @@ public class Gui extends JFrame implements ActionListener
 	/*--------Actions performed by user are set here--------*/
 	public void actionPerformed(ActionEvent event) 
 	{
-		filter = new FileNameExtensionFilter("Text Files","txt");			//Open only text files and set it to default text files
+		filter = new FileNameExtensionFilter("Text Files","txt");	//Open only text files and set it to default text files
 		Chooser.addChoosableFileFilter(filter);
 		Chooser.setAcceptAllFileFilterUsed(false);
 		
 		//-------------------------BUTTON 1-------------------------
 		if(event.getSource()==ChooseFile)
 		{
-			sentence.clear();												//Clear the array list
+			sentence.clear();					//Clear the array list
 
 			Chooser.showOpenDialog(null);
-			File inputSentence = Chooser.getSelectedFile();					//Open the text file, put directory into file variable
+			File inputSentence = Chooser.getSelectedFile();		//Open the text file, put directory into file variable
 																			
-			try{															//Scan through the file
+			try{							//Scan through the file
 				input = new Scanner(inputSentence);
 				}
 				catch (FileNotFoundException e) 
 				{
 				}
 			
-			while (input.hasNext())											//Read through it and put into console for testing purposes
+			while (input.hasNext())					//Read through it and put into console for testing purposes
 			{	
 				sentence.add(input.next());
 			}	
@@ -107,11 +106,11 @@ public class Gui extends JFrame implements ActionListener
 		//-------------------------BUTTON 2 -------------------------
 		if (event.getSource()==ChooseDictionary)
 		{
-			dictionary.clear();												//Clear arraylist
+			dictionary.clear();					//Clear arraylist
 			Chooser.showOpenDialog(null);
 			File inputDict = Chooser.getSelectedFile();	
-																			//Same as above, open the file, scan it, put into array list, store directory in string format
-			try 															//to allow editing the text file
+										//Same as above, open the file, scan it, put into array list, store directory in string format
+			try 							//to allow editing the text file
 			{ 
 				input = new Scanner(inputDict);
 			} catch (FileNotFoundException e) 
@@ -128,16 +127,16 @@ public class Gui extends JFrame implements ActionListener
 		//-------------------------BUTTON 3-------------------------
 		if(event.getSource()==Compare)
 		{
-			area1.setText("");												//Clear text area 
+			area1.setText("");					//Clear text area 
 			
-			if(dictionary.isEmpty() || sentence.isEmpty())					//Error check if user didn't choose dictionary or sentence to check
+			if(dictionary.isEmpty() || sentence.isEmpty())		//Error check if user didn't choose dictionary or sentence to check
 			{
 				JOptionPane.showMessageDialog(this,"Please choose a dictionary and a file to compare");
-				return;														//Exit if null
+				return;						//Exit if null
 			}
-			counter=0;														//Reset slang counter
+			counter=0;						//Reset slang counter
 			
-			for(int i =0; i < dictionary.size();i++)						//Nested Loop to iterate and  compare both array lists
+			for(int i =0; i < dictionary.size();i++)		//Nested Loop to iterate and  compare both array lists
 			{
 				for(int j=0; j < sentence.size();j++)
 				{
@@ -149,7 +148,7 @@ public class Gui extends JFrame implements ActionListener
 				}
 			}
 			
-			percentage = ((float)counter/sentence.size())*100;				//Get percentage of file that contains slang
+			percentage = ((float)counter/sentence.size())*100;			//Get percentage of file that contains slang
 			
 			area1.append("\n\nThere are: "+counter+" Slang words");			//Print to user the amount of slang words, and percentage of text file that is slang
 			area1.append("\nThe sentence is: "+format.format(percentage)+"% Slang");
@@ -174,7 +173,7 @@ public class Gui extends JFrame implements ActionListener
 			{
 				word = JOptionPane.showInputDialog("Please enter the word you want to input");		//User input for the new word in dictionary
 				try {
-					FileWriter out = new FileWriter(directory, true);								//Write to file a new line, the word and close
+					FileWriter out = new FileWriter(directory, true);				//Write to file a new line, the word and close
 					out.write("\n");
 					out.write(word);
 					out.close();
@@ -183,7 +182,7 @@ public class Gui extends JFrame implements ActionListener
 				{
 					e.printStackTrace();
 				}
-				JOptionPane.showMessageDialog(this,"Dictionary updated, please choose your dictionary again");			//Choose dictionary file again to compare
+				JOptionPane.showMessageDialog(this,"Dictionary updated, please choose your dictionary again");	//Choose dictionary file again to compare
 			}
 		}
 	}
