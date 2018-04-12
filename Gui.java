@@ -1,34 +1,57 @@
+/* Java Assignment 2018
+ * Dominik Dobrowolski C16347703
+ * Language analyser
+ */
 package com.assignment;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.awt.event.ActionEvent;
 
 public class Gui extends JFrame implements ActionListener
 {
+	private File directory;
+	private File inputDict;
+	//Array lists used to store file input
+	private static ArrayList<String> sentence = new ArrayList<String>();
+	private static ArrayList<String> dictionary = new ArrayList<String>();
 	
 	/*File Chooser for user to use GUI to choose a file to open*/
 	private	JFileChooser Chooser=new JFileChooser();
-	//
 	private FileNameExtensionFilter filter;
+	
 	/*Java buttons and text area for testing and user input*/
-	private JButton ChooseFile;
+	private JButton ChooseFile,ChooseDictionary,Compare,Edit;
 	private JTextArea area1;
+	private int counter;
 	
 	/*Scanner to read through the file and input the values*/
 	private Scanner input = new Scanner(System.in);
-	private String[] words;
+	
+	//Double to store percentage of file that is slang
+	private double percentage;
+	
+	//Format the output to 2 decimal places, don't want huge floating point values
+	NumberFormat format = new DecimalFormat("#0.00");
+	
+	//Store users word input
+	private String word;
 	
 	Gui(String title)
 	{
-		/*Edit options of the gui, layout etc*/
+		
+		/*Edit options of the gui layout etc*/
 		super(title);
 		setSize(800,400);
 		setLayout(new FlowLayout());
@@ -38,53 +61,143 @@ public class Gui extends JFrame implements ActionListener
 		Chooser.setPreferredSize(new Dimension(1000,500));
 
 		/*Button to start the FileChooser and choose what file to read through*/
-		ChooseFile=new JButton("Click to choose file");
+		ChooseFile=new JButton("Click to choose text file to check");
 		ChooseFile.addActionListener(this);
 		add(ChooseFile);
 		
-		area1=new JTextArea(25,25);
-		add(area1);
+		ChooseDictionary = new JButton("Click to choose dictionary");
+		ChooseDictionary.addActionListener(this);
+		add(ChooseDictionary);
 		
-		setVisible(true);
-	}
+		Compare = new JButton("COMPARE!");
+		Compare.addActionListener(this);
+		add(Compare);
+		
+		Edit = new JButton("Click this to edit dictionary in use");
+		Edit.addActionListener(this);
+		add(Edit);
+		
 
+		area1=new JTextArea(15,15);
+		add(area1);
+
+		setVisible(true);
+		
+	}
+	
 	/*Actions performed by user are set here*/
 	public void actionPerformed(ActionEvent event) 
 	{
 		//Open only text files and set it to default text files
 		filter = new FileNameExtensionFilter("Text Files","txt");
+		//Set default as text files only
 		Chooser.addChoosableFileFilter(filter);
 		Chooser.setAcceptAllFileFilterUsed(false);
-		//If user clicks the button to choose a file
+		
+		//BUTTON 1 -------------------------------------
 		if(event.getSource()==ChooseFile)
 		{
-			
+			sentence.clear();
 			//Open the text file, put in to file variable
 			Chooser.showOpenDialog(null);
-			File inputFile = Chooser.getSelectedFile();
+			File inputSentence = Chooser.getSelectedFile();
 			
 			//Scan through the file
-			try {
-				input = new Scanner(inputFile);
-			} catch (FileNotFoundException e) 
-			{
-			}
+			try{
+				input = new Scanner(inputSentence);
+				}
+				catch (FileNotFoundException e) 
+				{
+				}
 			
 			//Read through it and for now put it inside the text area
-			while (input.hasNextLine())
+			while (input.hasNext())
+			{	
+				sentence.add(input.next());
+			}	
+			System.out.println(sentence);
+			input.close();
+		}
+		//BUTTON 2 -------------------------
+		if (event.getSource()==ChooseDictionary)
+		{
+			dictionary.clear();
+			
+			Chooser.showOpenDialog(null);
+			File inputDict = Chooser.getSelectedFile();	
+			
+			try 
+			{ 
+				input = new Scanner(inputDict);
+			} catch (FileNotFoundException e) 
+			{}
+			
+			while (input.hasNext())
+			{	
+					dictionary.add(input.next());
+			}
+			directory=inputDict;
+			input.close();
+			System.out.println(dictionary);
+		}
+		//BUTTON 3 -------------------------
+		if(event.getSource()==Compare)
+		{
+			//Clear text area 
+			area1.setText("");
+			
+			//Error check if user didn't choose dictionary or has word list
+			if(dictionary.isEmpty() || sentence.isEmpty())
 			{
-					String line = input.nextLine();		
-					area1.append(line+"\n");
-					words=line.split(" ");
+				JOptionPane.showMessageDialog(this,"Please choose a dictionary and a file to compare");
+				return;
+			}
+			counter=0;//Reset counter
+			//Loop to iterate and  compare both array lists
+			for(int i =0; i < dictionary.size();i++)
+			{
+				for(int j=0; j < sentence.size();j++)
+				{
+					if(sentence.get(j).contains(dictionary.get(i)))
+					{
+						counter=counter+1;
+						area1.append("\nSlang word found: "+dictionary.get(i));
+					}
+				}
 			}
 			
+			//Get percentage of file that contains slang
+			percentage = ((float)counter/sentence.size())*100;
 			
-			//Close input 
-			input.close();
-			
-			for(int i=0;i<words.length;i++)
+			//Print to user the amount of slang words, and percentage of text file that is slang
+			area1.append("\nThere are: "+counter+" Slang words");
+			area1.append("\nThe sentence is: "+format.format(percentage)+"% Slang");
+
+		}
+		if(event.getSource()==Edit)
+		{
+			if(dictionary.isEmpty())
 			{
-				System.out.println(words[i]);
+				JOptionPane.showMessageDialog(this,"Please choose a dictionary first to edit");
+				return;
+			}
+			else
+			{
+				word = JOptionPane.showInputDialog("Please enter the word you want to input");
+				try {
+					
+					FileWriter out = new FileWriter(directory, true);
+					out.write("\n");
+					out.write(word);
+					out.flush();
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				JOptionPane.showMessageDialog(this,"Dictionary updated, please choose your dictionary again");
+			
+				
 			}
 		}
 	}
