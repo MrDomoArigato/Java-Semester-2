@@ -1,6 +1,7 @@
 /* Java Assignment 2018
  * Dominik Dobrowolski C16347703
- * Language analyser
+ * Language analyser checks for slang words and percentage of slang in the file
+ * Allows to add new words to slang dictionary 
  */
 package com.assignment;
 
