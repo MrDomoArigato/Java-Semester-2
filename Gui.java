@@ -21,8 +21,8 @@ import java.awt.event.ActionEvent;
 
 public class Gui extends JFrame implements ActionListener
 {
+	//Variables to store directory as string
 	private File directory;
-	private File inputDict;
 	//Array lists used to store file input
 	private static ArrayList<String> sentence = new ArrayList<String>();
 	private static ArrayList<String> dictionary = new ArrayList<String>();
@@ -121,8 +121,8 @@ public class Gui extends JFrame implements ActionListener
 		//BUTTON 2 -------------------------
 		if (event.getSource()==ChooseDictionary)
 		{
+			//Clear arraylist and input new values 
 			dictionary.clear();
-			
 			Chooser.showOpenDialog(null);
 			File inputDict = Chooser.getSelectedFile();	
 			
@@ -170,12 +170,20 @@ public class Gui extends JFrame implements ActionListener
 			percentage = ((float)counter/sentence.size())*100;
 			
 			//Print to user the amount of slang words, and percentage of text file that is slang
-			area1.append("\nThere are: "+counter+" Slang words");
+			area1.append("\n\nThere are: "+counter+" Slang words");
 			area1.append("\nThe sentence is: "+format.format(percentage)+"% Slang");
-
+			
+			if(counter!=0)
+			{
+				JOptionPane.showMessageDialog(this,"The sentence is slang, it is not formal");
+			}else
+			{
+				JOptionPane.showMessageDialog(this,"This is a formal sentence");
+			}
 		}
 		if(event.getSource()==Edit)
 		{
+			//Button to edit dictionary, error check if file chosen
 			if(dictionary.isEmpty())
 			{
 				JOptionPane.showMessageDialog(this,"Please choose a dictionary first to edit");
@@ -183,6 +191,7 @@ public class Gui extends JFrame implements ActionListener
 			}
 			else
 			{
+				//User input for the new word in dictionary
 				word = JOptionPane.showInputDialog("Please enter the word you want to input");
 				try {
 					
@@ -194,10 +203,8 @@ public class Gui extends JFrame implements ActionListener
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
+				//Choose dictionary again
 				JOptionPane.showMessageDialog(this,"Dictionary updated, please choose your dictionary again");
-			
-				
 			}
 		}
 	}
