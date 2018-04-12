@@ -22,55 +22,44 @@ import java.awt.event.ActionEvent;
 
 public class Gui extends JFrame implements ActionListener
 {
-	//Variables to store directory as string
-	private File directory;
-	//Array lists used to store file input
-	private static ArrayList<String> sentence = new ArrayList<String>();
+	private File directory;													//Variables to store directory as string
+	private static ArrayList<String> sentence = new ArrayList<String>();	//Array lists used to store file input
 	private static ArrayList<String> dictionary = new ArrayList<String>();
 	
-	/*File Chooser for user to use GUI to choose a file to open*/
-	private	JFileChooser Chooser=new JFileChooser();
+	private	JFileChooser Chooser=new JFileChooser();						//File Chooser for user to use GUI to choose a file to open
 	private FileNameExtensionFilter filter;
 	
-	/*Java buttons and text area for testing and user input*/
-	private JButton ChooseFile,ChooseDictionary,Compare,Edit;
+	private JButton ChooseFile,ChooseDictionary,Compare,Edit;				//Java buttons and text area for testing and user input
 	private JTextArea area1;
 	private int counter;
 	
-	/*Scanner to read through the file and input the values*/
-	private Scanner input = new Scanner(System.in);
+	private Scanner input = new Scanner(System.in);							//Scanner to read through the file and input the values
 	
-	//Double to store percentage of file that is slang
-	private double percentage;
+	private double percentage;												//Double to store percentage of file that is slang
 	
-	//Format the output to 2 decimal places, don't want huge floating point values
-	NumberFormat format = new DecimalFormat("#0.00");
+	NumberFormat format = new DecimalFormat("#0.00");						//Format the output to 2 decimal places, don't want huge floating point values
 	
-	//Store users word input
-	private String word;
+	private String word;													//Store users word input
 	
 	Gui(String title)
 	{
-		
-		/*Edit options of the gui layout etc*/
-		super(title);
+		super(title);														//Edit options of the gui layout etc
 		setSize(800,400);
 		setLayout(new FlowLayout());
 		setLocation(100,100);
 		
-		/*Edit the size of the FileChooser*/
-		Chooser.setPreferredSize(new Dimension(1000,500));
 
-		/*Button to start the FileChooser and choose what file to read through*/
-		ChooseFile=new JButton("Click to choose text file to check");
+		Chooser.setPreferredSize(new Dimension(1000,500));					//Edit the size of the FileChooser menu
+
+		ChooseFile=new JButton("Click to choose text file to check");		//Button to start the FileChooser and choose what file to read through
 		ChooseFile.addActionListener(this);
 		add(ChooseFile);
-		
-		ChooseDictionary = new JButton("Click to choose dictionary");
+
+		ChooseDictionary = new JButton("Click to choose dictionary"); 		//Choose dictionary button
 		ChooseDictionary.addActionListener(this);
 		add(ChooseDictionary);
-		
-		Compare = new JButton("COMPARE!");
+
+		Compare = new JButton("COMPARE!"); 									//Compare button
 		Compare.addActionListener(this);
 		add(Compare);
 		
@@ -79,7 +68,7 @@ public class Gui extends JFrame implements ActionListener
 		add(Edit);
 		
 
-		area1=new JTextArea(15,15);
+		area1=new JTextArea(15,15);											//Area of text field
 		add(area1);
 
 		setVisible(true);
@@ -135,7 +124,7 @@ public class Gui extends JFrame implements ActionListener
 			
 			while (input.hasNext())
 			{	
-					dictionary.add(input.next());
+				dictionary.add(input.next());
 			}
 			directory=inputDict;
 			input.close();
@@ -195,13 +184,14 @@ public class Gui extends JFrame implements ActionListener
 				//User input for the new word in dictionary
 				word = JOptionPane.showInputDialog("Please enter the word you want to input");
 				try {
-					
 					FileWriter out = new FileWriter(directory, true);
 					out.write("\n");
 					out.write(word);
 					out.flush();
 					out.close();
-				} catch (IOException e) {
+					
+				} catch (IOException e)
+				{
 					e.printStackTrace();
 				}
 				//Choose dictionary again
