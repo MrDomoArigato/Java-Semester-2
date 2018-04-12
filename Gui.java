@@ -1,4 +1,4 @@
-/* Java Assignment 2018
+/* Java Assignment 2018 - Due date 16th April
  * Dominik Dobrowolski C16347703
  * Language analyser checks for slang words and percentage of slang in the file
  * Allows to add new words to slang dictionary 
