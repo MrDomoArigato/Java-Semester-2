@@ -52,7 +52,7 @@ public class Gui extends JFrame implements ActionListener
 		
 
 		Chooser.setPreferredSize(new Dimension(1000,500));					//Edit the size of the FileChooser menu
-		getContentPane().setBackground(Color.black);
+		getContentPane().setBackground(Color.GRAY);
 		ChooseFile=new JButton("Click to choose text file to check");		//Button to start the FileChooser and choose what file to read through
 		ChooseFile.addActionListener(this);
 		ChooseFile.setBackground(Color.CYAN);
