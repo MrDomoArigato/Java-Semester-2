@@ -108,7 +108,7 @@ public class Gui extends JFrame implements ActionListener
 			
 			while (input.hasNext())											//Read through it and put into console for testing purposes
 			{	
-				sentence.add(input.next());
+				sentence.add(input.next().toLowerCase());
 			}	
 			System.out.println(sentence);
 			input.close();
